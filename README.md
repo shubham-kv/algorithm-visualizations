@@ -1,2 +1,3 @@
 # algorithm-visualizations
-Data Structure &amp; Algoorithm Visulaizations using Canvas
+
+Data Structure &amp; Algorithm Visualizations with Html5 Canvas.
