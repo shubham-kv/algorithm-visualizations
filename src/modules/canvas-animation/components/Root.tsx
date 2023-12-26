@@ -3,7 +3,7 @@ import {Animation} from './Animation'
 
 export function CanvasAnimation() {
 	return (
-		<section>
+		<>
 			<Header />
 
 			<div>
@@ -15,6 +15,6 @@ export function CanvasAnimation() {
 			<div className="mt-4">
 				<Animation />
 			</div>
-		</section>
+		</>
 	)
 }

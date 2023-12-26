@@ -22,17 +22,20 @@ export function Animation() {
 		ballsRef.current = balls
 	}, [width, height])
 
-	const draw = useCallback((ctx: CanvasRenderingContext2D) => {
-		const balls = ballsRef.current
+	const draw = useCallback(
+		(ctx: CanvasRenderingContext2D) => {
+			const balls = ballsRef.current
 
-		for (const ball of balls) {
-			ball.draw(ctx)
-			ball.update({
-				width,
-				height
-			})
-		}
-	}, [width, height])
+			for (const ball of balls) {
+				ball.draw(ctx)
+				ball.update({
+					width,
+					height
+				})
+			}
+		},
+		[width, height]
+	)
 
 	const update = useCallback(() => {
 		const balls = ballsRef.current
@@ -46,18 +49,17 @@ export function Animation() {
 	}, [width, height])
 
 	return (
-		<div>
-			<Canvas
-				canvasClassName="w-full h-full rounded-sm border-2 border-slate-300"
-				width={width}
-				height={height}
-				setWidth={setWidth}
-				setHeight={setHeight}
-				fps={360}
-				draw={draw}
-				update={update}
-				initialize={initializeData}
-			/>
-		</div>
+		<Canvas
+			wrapperClassName="w-[100%] h-[600px]"
+			canvasClassName="rounded-sm border-2 border-slate-300"
+			width={width}
+			height={height}
+			setWidth={setWidth}
+			setHeight={setHeight}
+			fps={360}
+			draw={draw}
+			update={update}
+			initialize={initializeData}
+		/>
 	)
 }

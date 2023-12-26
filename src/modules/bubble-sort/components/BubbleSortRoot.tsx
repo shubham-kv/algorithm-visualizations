@@ -4,7 +4,7 @@ import {BubbleSortVisualization} from './BubbleSortVisualization'
 export function BubbleSortRoot() {
 	return (
 		<>
-			<section>
+			<section className='py-4 mb-8'>
 				<Header text={'Bubble Sort '} />
 
 				<div>

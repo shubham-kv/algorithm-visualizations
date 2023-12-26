@@ -231,7 +231,7 @@ export function BubbleSortVisualization() {
 	return (
 		<div className="flex flex-col md:flex-row flex-wrap gap-8">
 			<Canvas
-				wrapperClassName="flex-grow max-w-full sm:max-w-xl lg:max-w-lg xl:max-w-xl transition-all"
+				wrapperClassName="flex-grow max-w-full sm:max-w-xl lg:max-w-lg xl:max-w-xl max-h-[420px] transition-all rounded-sm"
 				canvasClassName="rounded-sm shadow-lg border-2 border-gray-100"
 				width={width}
 				setWidth={setWidth}
