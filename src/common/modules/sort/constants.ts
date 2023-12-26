@@ -38,5 +38,6 @@ export enum AnimationState {
 	idle,
 	running,
 	paused,
-	stopped
+	stopped,
+	completed
 }

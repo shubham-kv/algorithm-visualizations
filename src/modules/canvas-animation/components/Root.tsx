@@ -6,7 +6,7 @@ export function CanvasAnimation() {
 		<>
 			<Header />
 
-			<main className="w-full mt-4">
+			<main className="mt-4">
 				<Animation />
 			</main>
 		</>

@@ -71,7 +71,7 @@ export function SortMenu(props: MenuProps) {
 	const isRunning = animationState === AnimationState.running
 
 	return (
-		<div className="h-fit inline-flex flex-col p-4 space-y-4 border-gray-100 border-2 rounded-md">
+		<div className="flex-grow sm:max-w-xl lg:max-w-lg xl:max-w-md inline-flex flex-col p-4 space-y-4 border-gray-100 border-2 rounded-md">
 			<div className="flex space-x-2">
 				<Button
 					onClick={resume}
@@ -146,8 +146,9 @@ export function SortMenu(props: MenuProps) {
 					disabled={isRunning}
 				>
 					{Scenarios.map((value, i) => (
-						<div key="value" className="flex align-baseline space-x-2">
+						<div key={value} className="flex align-baseline space-x-2">
 							<RadioGroupItem id={`scenario-${value}-${i}`} value={value} />
+
 							<Label htmlFor={`scenario-${value}-${i}`} className="capitalize">
 								{value.replaceAll('-', ' ')}
 							</Label>

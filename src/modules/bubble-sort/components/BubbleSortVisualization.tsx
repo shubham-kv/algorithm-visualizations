@@ -4,24 +4,32 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {Canvas} from '@/common/components/Canvas'
 import {SortMenu} from '@/common/modules/sort/components/SortMenu'
 
-import {range} from '@/common/utils'
+import {random} from '@/common/utils'
 
 import {
 	FpsChoiceData,
 	FpsChoiceKey,
 	Scenario
 } from '@/common/modules/sort/types'
+
 import {AnimationState, FpsChoices} from '@/common/modules/sort/constants'
 
-const width = 700
-const height = 600
+type Dimension = {
+	width: number
+	height: number
+}
+
+const defaultDimensions: Dimension = Object.freeze({
+	width: 400,
+	height: 420
+})
 
 type Indices = {
 	i: number
 	j: number
 }
 
-const initialFps = FpsChoices.find((v) => v.key === 'very-slow')!
+const initialFps = FpsChoices.find((v) => v.key === 'slow')!
 const initialArrayLength = 10
 const initialStartedStatus = false
 
@@ -43,6 +51,9 @@ export function BubbleSortVisualization() {
 	const isArrayInitialized = useRef<boolean>(false)
 	const indicesRef = useRef<Indices>(Object.assign({}, defaultIndices))
 
+	const [width, setWidth] = useState(defaultDimensions.width)
+	const [height, setHeight] = useState(defaultDimensions.height)
+
 	const [isStarted, setIsStarted] = useState<boolean>(initialStartedStatus)
 	const [scenario, setScenario] = useState<Scenario>(defaultScenario)
 	const [animationState, setAnimationState] = useState<AnimationState>(
@@ -54,7 +65,7 @@ export function BubbleSortVisualization() {
 			const array: number[] = []
 
 			for (let i = 0; i < length; i++) {
-				const value = Math.floor(range(10, 90))
+				const value = Math.floor(random(10, 90))
 				array.push(value)
 			}
 
@@ -69,9 +80,13 @@ export function BubbleSortVisualization() {
 	)
 
 	const start = useCallback(() => {
+		if (animationState === AnimationState.completed) {
+			arrayRef.current = Array.from(originalArrayRef.current)
+		}
+
 		setIsStarted(true)
 		setAnimationState(AnimationState.running)
-	}, [])
+	}, [animationState])
 
 	const stop = useCallback(() => {
 		// stop the animation
@@ -136,17 +151,11 @@ export function BubbleSortVisualization() {
 
 				ctx.fillRect(x, y, barWidth, barHeight)
 
-				ctx.font = '32px'
-				ctx.fillStyle = 'rgba(0,0,0,0.9)'
-				ctx.textAlign = 'center'
-				ctx.textBaseline = 'middle'
-				ctx.fillText(value.toString(), x + barWidth / 2, height - 20)
-
 				ctx.fillStyle = 'rgba(0,0,0,0.8)'
 				ctx.fillRect(x, y, barWidth, 10)
 			}
 		},
-		[arrayLength]
+		[width, height, arrayLength]
 	)
 
 	const update = useCallback(() => {
@@ -174,10 +183,11 @@ export function BubbleSortVisualization() {
 		}
 
 		if (indices.i >= upperLimitI) {
+			indices.i = 0
 			indices.j = defaultIndices.j
 
 			setIsStarted(false)
-			setAnimationState(AnimationState.stopped)
+			setAnimationState(AnimationState.completed)
 		}
 	}, [arrayLength])
 
@@ -219,11 +229,14 @@ export function BubbleSortVisualization() {
 	}, [pause, resume])
 
 	return (
-		<div className="w-full h-full flex space-x-8">
+		<div className="flex flex-col md:flex-row flex-wrap gap-8">
 			<Canvas
-				className="inline-block w-[600px] h-[600px] rounded-sm shadow-lg border-gray-100 border-2"
+				wrapperClassName="flex-grow max-w-full sm:max-w-xl lg:max-w-lg xl:max-w-xl transition-all"
+				canvasClassName="rounded-sm shadow-lg border-2 border-gray-100"
 				width={width}
+				setWidth={setWidth}
 				height={height}
+				setHeight={setHeight}
 				fps={selectedFps.value}
 				animationState={animationState}
 				draw={draw}

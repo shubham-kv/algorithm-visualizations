@@ -1,4 +1,4 @@
-import {range} from '@/common/utils'
+import {random} from '@/common/utils'
 
 export class Ball {
 	x: number = 0
@@ -37,13 +37,13 @@ export class Ball {
 
 	static create(params: {width: number; height: number}) {
 		const {width, height} = params
-		const diameter = range(40, 60)
+		const diameter = random(40, 60)
 		const radius = diameter / 2
 
-		const x = range(diameter + 10, width - diameter - 10)
-		const y = range(diameter + 10, height - diameter - 10)
-		let velocityX = range(0.5, 1)
-		let velocityY = range(0.5, 1)
+		const x = random(diameter + 10, width - diameter - 10)
+		const y = random(diameter + 10, height - diameter - 10)
+		let velocityX = random(0.5, 1)
+		let velocityY = random(0.5, 1)
 
 		if (Math.random() > 0.5) {
 			velocityX = -velocityX

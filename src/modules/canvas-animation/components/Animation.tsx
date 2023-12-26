@@ -1,14 +1,16 @@
 'use client'
-import {useCallback, useRef} from 'react'
+import {useCallback, useRef, useState} from 'react'
 
 import {Canvas} from '@/common/components/Canvas'
 import {Ball} from '../entities/Ball'
 
-const width = 700
-const height = 600
+const defaultWidth = 400
+const defaultHeight = 600
 
 export function Animation() {
 	const ballsRef = useRef<Ball[]>([])
+	const [width, setWidth] = useState<number>(defaultWidth)
+	const [height, setHeight] = useState<number>(defaultHeight)
 
 	const initializeData = useCallback(() => {
 		const balls: Ball[] = []
@@ -18,7 +20,7 @@ export function Animation() {
 		}
 
 		ballsRef.current = balls
-	}, [])
+	}, [width, height])
 
 	const draw = useCallback((ctx: CanvasRenderingContext2D) => {
 		const balls = ballsRef.current
@@ -30,7 +32,7 @@ export function Animation() {
 				height
 			})
 		}
-	}, [])
+	}, [width, height])
 
 	const update = useCallback(() => {
 		const balls = ballsRef.current
@@ -41,23 +43,21 @@ export function Animation() {
 				height
 			})
 		}
-	}, [])
+	}, [width, height])
 
 	return (
-		<div className="w-full h-full">
-			<div>{/* <Button variant={'outline'}>Start</Button> */}</div>
-
-			<div className="w-full relative mt-4">
-				<Canvas
-					className="inline-block rounded-sm border-2 border-slate-300"
-					width={width}
-					height={height}
-					fps={360}
-					draw={draw}
-					update={update}
-					initialize={initializeData}
-				/>
-			</div>
+		<div>
+			<Canvas
+				canvasClassName="w-full h-full rounded-sm border-2 border-slate-300"
+				width={width}
+				height={height}
+				setWidth={setWidth}
+				setHeight={setHeight}
+				fps={360}
+				draw={draw}
+				update={update}
+				initialize={initializeData}
+			/>
 		</div>
 	)
 }
