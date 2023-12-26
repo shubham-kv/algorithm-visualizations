@@ -89,8 +89,8 @@ export function CanvasPrimitive(props: CanvasProps) {
 	return (
 		<canvas
 			style={{
-				width,
-				height
+				width: '100%',
+				height: '100%'
 			}}
 			width={width}
 			height={height}

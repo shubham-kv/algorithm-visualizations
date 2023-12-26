@@ -9,27 +9,30 @@ export function Canvas(props: CanvasProps) {
 	const wrapper = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
-		const resizeCallback = () => {
+		const handleResize = () => {
 			if (wrapper.current) {
-				const {width, height} = wrapper.current.getBoundingClientRect()
-				setWidth(Math.floor(width))
-				setHeight(Math.floor(height))
+				const element = wrapper.current
+				const width = element.clientWidth
+				const height = element.clientHeight
+
+				setWidth(width)
+				setHeight(height)
 			}
 		}
 
-		const observer = new ResizeObserver(resizeCallback)
-
-		if (wrapper.current) {
-			observer.observe(wrapper.current)
-		}
+		handleResize()
+		window.addEventListener('resize', handleResize)
 
 		return () => {
-			observer.disconnect()
+			window.removeEventListener('resize', handleResize)
 		}
 	}, [setWidth, setHeight])
 
 	return (
-		<div ref={wrapper} className={wrapperClassName}>
+		<div
+			ref={wrapper}
+			className={wrapperClassName}
+		>
 			<CanvasPrimitive {...props} />
 		</div>
 	)
