@@ -6,7 +6,7 @@ import {SortMenu} from '@/common/modules/sort/components/SortMenu'
 
 import {range} from '@/common/utils'
 
-import {FpsChoiceData, FpsChoiceKey} from '@/common/modules/sort/types'
+import {FpsChoiceData, FpsChoiceKey, Scenario} from '@/common/modules/sort/types'
 import {AnimationState, FpsChoices} from '@/common/modules/sort/constants'
 
 const width = 700
@@ -17,34 +17,86 @@ type Indices = {
 	j: number
 }
 
-const DEFAULT_FPS = FpsChoices.find((v) => v.key === 'medium')!
-const DEFAULT_ARRAY_LENGTH = 15
-const DEFAULT_STARTED = false
+const initialFps = FpsChoices.find((v) => v.key === 'very-slow')!
+const initialArrayLength = 10
+const initialStartedStatus = false
+
+const defaultIndices: Indices = Object.freeze({
+	i: 0,
+	j: -2
+})
+
+const initialAnimationState: AnimationState = AnimationState.idle
+const defaultScenario: Scenario = 'random'
 
 export function BubbleSortVisualization() {
-	const [selectedFps, setSelectedFps] = useState<FpsChoiceData>(DEFAULT_FPS)
+	const [selectedFps, setSelectedFps] = useState<FpsChoiceData>(initialFps)
 
-	const [arrayLength, setArrayLength] = useState(DEFAULT_ARRAY_LENGTH)
+	const [arrayLength, setArrayLength] = useState(initialArrayLength)
+	const originalArrayRef = useRef<number[]>(Array(arrayLength).fill(0))
 	const arrayRef = useRef<number[]>(Array(arrayLength).fill(0))
+
 	const isArrayInitialized = useRef<boolean>(false)
+	const indicesRef = useRef<Indices>(Object.assign({}, defaultIndices))
 
-	const indicesRef = useRef<Indices>({i: 0, j: -2})
-
-	const [isStarted, setIsStarted] = useState(DEFAULT_STARTED)
+	const [isStarted, setIsStarted] = useState<boolean>(initialStartedStatus)
+	const [scenario, setScenario] = useState<Scenario>(defaultScenario)
 	const [animationState, setAnimationState] = useState<AnimationState>(
-		AnimationState.idle
+		initialAnimationState
 	)
 
 	const fillArray = useCallback((length: number) => {
-		const newArray: number[] = []
+		const array: number[] = []
 
 		for (let i = 0; i < length; i++) {
 			const value = Math.floor(range(10, 90))
-			newArray.push(value)
+			array.push(value)
 		}
 
-		arrayRef.current = newArray
+		if (scenario === 'worst-case') {
+			array.sort((a, b) => b - a)
+		}
+
+		originalArrayRef.current = array
+		arrayRef.current = Array.from(array)
+	}, [scenario])
+
+	const start = useCallback(() => {
+		setIsStarted(true)
+		setAnimationState(AnimationState.running)
 	}, [])
+
+	const stop = useCallback(() => {
+		// stop the animation
+		setIsStarted(false)
+		setAnimationState(AnimationState.stopped)
+
+		// reset the indices & the array to their original values
+		indicesRef.current = Object.assign({}, defaultIndices)
+		arrayRef.current = Array.from(originalArrayRef.current)
+	}, [])
+
+	const resume = useCallback(() => {
+		setAnimationState(AnimationState.running)
+	}, [])
+
+	const pause = useCallback(() => {
+		setAnimationState(AnimationState.paused)
+	}, [])
+
+	const reset = useCallback(() => {
+		isArrayInitialized.current = false
+		indicesRef.current = Object.assign({}, defaultIndices)
+
+		setSelectedFps(initialFps)
+
+		setArrayLength(initialArrayLength)
+		fillArray(initialArrayLength)
+
+		setScenario(defaultScenario)
+		setIsStarted(initialStartedStatus)
+		setAnimationState(initialAnimationState)
+	}, [fillArray])
 
 	const initializeData = useCallback(() => {
 		if (!isArrayInitialized.current) {
@@ -57,12 +109,12 @@ export function BubbleSortVisualization() {
 		(ctx: CanvasRenderingContext2D) => {
 			const array = arrayRef.current
 			const arraySize = arrayLength
-			const {j} = indicesRef.current
+			const indices = indicesRef.current
 
 			const divisions = width / arraySize
 			const barWidth = divisions - 1
 			const length = arraySize
-			const compareIndices = [j, j + 1]
+			const compareIndices = [indices.j, indices.j + 1]
 
 			for (let k = 0; k < length; k++) {
 				const value = Math.floor(array[k])
@@ -93,78 +145,62 @@ export function BubbleSortVisualization() {
 	const update = useCallback(() => {
 		const array = arrayRef.current
 		const length = arrayLength
-		const {i, j} = indicesRef.current
+		const indices = indicesRef.current
 
-		if (i < length && j < length - i - 1) {
-			const prev = array[j]
-			const next = array[j + 1]
+		const upperLimitI = length - 1
+		const upperLimitJ = length - indices.i - 1
+
+		if (indices.i < upperLimitI && indices.j < upperLimitJ) {
+			const prev = array[indices.j]
+			const next = array[indices.j + 1]
 
 			if (prev > next) {
-				;[array[j], array[j + 1]] = [next, prev]
+				;[array[indices.j], array[indices.j + 1]] = [next, prev]
 			}
 
-			indicesRef.current.j++
+			indices.j++
 		}
 
-		if (j === length - i - 1) {
-			indicesRef.current.j = 0
-			indicesRef.current.i++
+		if (indices.j >= upperLimitJ) {
+			indices.j = 0
+			indices.i++
 		}
 
-		if (indicesRef.current.i === length) {
-			indicesRef.current.j = -2
-			setIsStarted(DEFAULT_STARTED)
-			setAnimationState(AnimationState.idle)
+		if (indices.i >= upperLimitI) {
+			indices.j = defaultIndices.j
+
+			setIsStarted(false)
+			setAnimationState(AnimationState.stopped)
 		}
 	}, [arrayLength])
 
-	const start = useCallback(() => {
-		setIsStarted(true)
-		setAnimationState(AnimationState.running)
-	}, [])
-
-	const stop = useCallback(() => {
-		setIsStarted(false)
-		setAnimationState(AnimationState.stopped)
-	}, [])
-
-	const resume = useCallback(() => {
-		setAnimationState(AnimationState.running)
-	}, [])
-
-	const pause = useCallback(() => {
-		setAnimationState(AnimationState.paused)
-	}, [])
-
-	const reset = useCallback(() => {
-		indicesRef.current.i = 0
-		indicesRef.current.j = -2
-
-		setSelectedFps(DEFAULT_FPS)
-
-		isArrayInitialized.current = false
-		setArrayLength(DEFAULT_ARRAY_LENGTH)
-		fillArray(DEFAULT_ARRAY_LENGTH)
-
-		setAnimationState(AnimationState.idle)
-		setIsStarted(DEFAULT_STARTED)
-	}, [fillArray])
-
-	const onFpsChange = useCallback(
+	const handleFpsChange = useCallback(
 		(value: FpsChoiceKey) =>
-			setSelectedFps(FpsChoices.find((v) => v.key === value) ?? DEFAULT_FPS),
+			setSelectedFps(FpsChoices.find((v) => v.key === value) ?? initialFps),
 		[]
 	)
 
-	const onArrayLengthChange = useCallback((newLength: number) => {
-		indicesRef.current.i = 0
-		indicesRef.current.j = -2
+	const generateNewArray = useCallback(() => {
+		fillArray(arrayLength)
+	}, [fillArray, arrayLength])
 
+	const handleArrayLengthChange = useCallback((newLength: number) => {
 		isArrayInitialized.current = false
+		indicesRef.current = Object.assign({}, defaultIndices)
 
 		setArrayLength(newLength)
-		setIsStarted(DEFAULT_STARTED)
-		setAnimationState(AnimationState.idle)
+
+		setIsStarted(initialStartedStatus)
+		setAnimationState(initialAnimationState)
+	}, [])
+
+	const handleScenarioChange = useCallback((value: Scenario) => {
+		isArrayInitialized.current = false
+		indicesRef.current = Object.assign({}, defaultIndices)
+
+		setScenario(value)
+		setIsStarted(initialStartedStatus)
+		setAnimationState(initialAnimationState)
 	}, [])
 
 	useEffect(() => {
@@ -190,16 +226,19 @@ export function BubbleSortVisualization() {
 
 			<SortMenu
 				animationState={animationState}
-				fpsValue={selectedFps}
 				isStarted={isStarted}
+				fpsValue={selectedFps}
+				onFpsValueChange={handleFpsChange}
 				arrayLength={arrayLength}
+				onArrayLengthChange={handleArrayLengthChange}
+				generateNewArray={generateNewArray}
+				scenario={scenario}
+				onScenarioChange={handleScenarioChange}
 				start={start}
 				stop={stop}
 				resume={resume}
 				pause={pause}
 				reset={reset}
-				onFpsValueChange={onFpsChange}
-				onArrayLengthChange={onArrayLengthChange}
 			/>
 		</div>
 	)

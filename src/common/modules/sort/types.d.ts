@@ -6,3 +6,5 @@ export type Choice<K = string, V = number> = {
 
 export type FpsChoiceKey = 'very-slow' | 'slow' | 'medium' | 'fast' | 'very-fast'
 export type FpsChoiceData = Choice<FpsChoiceKey, number>
+
+export type Scenario = 'random' | 'beast-case' | 'worst-case'

@@ -1,4 +1,4 @@
-import {FpsChoiceData} from './types'
+import {FpsChoiceData, Scenario} from './types'
 
 export const FpsChoices: FpsChoiceData[] = [
 	{
@@ -26,6 +26,12 @@ export const FpsChoices: FpsChoiceData[] = [
 		name: 'very fast',
 		value: 30
 	},
+]
+
+export const Scenarios: Scenario[] = [
+	'random',
+	// 'beast-case',
+	'worst-case'
 ]
 
 export enum AnimationState {

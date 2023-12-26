@@ -14,9 +14,10 @@ import {
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 
-import {FpsChoiceData, FpsChoiceKey} from '../types'
-import {AnimationState, FpsChoices} from '../constants'
+import {FpsChoiceData, FpsChoiceKey, Scenario} from '../types'
+import {AnimationState, FpsChoices, Scenarios} from '../constants'
 
 type MenuProps = {
 	animationState: AnimationState
@@ -26,6 +27,10 @@ type MenuProps = {
 
 	arrayLength: number
 	onArrayLengthChange: (newLength: number) => void
+	generateNewArray: () => void
+
+	scenario: Scenario
+	onScenarioChange: (value: Scenario) => void
 
 	isStarted: boolean
 
@@ -43,6 +48,9 @@ export function SortMenu(props: MenuProps) {
 		onFpsValueChange,
 		arrayLength,
 		onArrayLengthChange,
+		generateNewArray,
+		scenario,
+		onScenarioChange,
 		isStarted,
 		start,
 		stop,
@@ -65,19 +73,23 @@ export function SortMenu(props: MenuProps) {
 	return (
 		<div className="h-fit inline-flex flex-col p-4 space-y-4 border-gray-100 border-2 rounded-md">
 			<div className="flex space-x-2">
-				<Button onClick={resume} disabled={!isStarted || isRunning} variant={'outline'}>
-					Resume
-				</Button>
-
-				<Button onClick={pause} disabled={!isStarted || isPaused} variant={'outline'}>
-					Pause
+				<Button
+					onClick={resume}
+					disabled={!isStarted || isRunning}
+					variant={'outline'}
+				>
+					<span>Resume</span>
 				</Button>
 
 				<Button
-					onClick={reset}
-					disabled={isRunning}
+					onClick={pause}
+					disabled={!isStarted || isPaused}
 					variant={'outline'}
 				>
+					<span>Pause</span>
+				</Button>
+
+				<Button onClick={reset} disabled={isRunning} variant={'outline'}>
 					Reset
 				</Button>
 			</div>
@@ -85,7 +97,7 @@ export function SortMenu(props: MenuProps) {
 			<div>
 				<Select value={fpsValue.key} onValueChange={onFpsValueChange}>
 					<SelectTrigger>
-						<SelectValue placeholder="Select speed" />
+						<SelectValue placeholder="Select speed" className="capitalize" />
 					</SelectTrigger>
 
 					<SelectContent>
@@ -98,7 +110,8 @@ export function SortMenu(props: MenuProps) {
 									value={choice.key}
 									className="capitalize"
 								>
-									{choice.name}
+									{choice.name.charAt(0).toLocaleUpperCase() +
+										choice.name.substring(1)}
 								</SelectItem>
 							))}
 						</SelectGroup>
@@ -107,7 +120,7 @@ export function SortMenu(props: MenuProps) {
 			</div>
 
 			<div className="flex justify-between items-baseline">
-				<Label htmlFor="array-length-input">Array length:</Label>
+				<Label htmlFor="array-length-input">Array Size:</Label>
 
 				<Input
 					id="array-length-input"
@@ -120,6 +133,38 @@ export function SortMenu(props: MenuProps) {
 					onChange={handleArrayLengthChange}
 					disabled={isRunning}
 				/>
+			</div>
+
+			<div className="flex justify-between">
+				<Label htmlFor="scenario-input">Scenario:</Label>
+
+				<RadioGroup
+					id="scenario-input"
+					value={scenario}
+					onValueChange={onScenarioChange}
+					className="flex flex-col space-y-1"
+					disabled={isRunning}
+				>
+					{Scenarios.map((value, i) => (
+						<div key="value" className="flex align-baseline space-x-2">
+							<RadioGroupItem id={`scenario-${value}-${i}`} value={value} />
+							<Label htmlFor={`scenario-${value}-${i}`} className="capitalize">
+								{value.replaceAll('-', ' ')}
+							</Label>
+						</div>
+					))}
+				</RadioGroup>
+			</div>
+
+			<div>
+				<Button
+					onClick={generateNewArray}
+					variant={'outline'}
+					className="w-full"
+					disabled={isStarted}
+				>
+					Generate new array
+				</Button>
 			</div>
 
 			<div>

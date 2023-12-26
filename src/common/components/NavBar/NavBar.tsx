@@ -3,7 +3,7 @@ import {NavBarContent} from './NavBarContent'
 
 export function NavBar() {
 	return (
-		<div className="min-w-[250px] p-4">
+		<div className="min-w-[250px] p-4 mr-6">
 			<NavHeader />
 			<NavBarContent />
 		</div>
