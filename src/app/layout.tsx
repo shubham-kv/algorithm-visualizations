@@ -16,8 +16,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			<body className="font-sans">
 				<div className="flex min-h-screen">
 					<NavBar />
-					<div className="flex-1">
-						<div className="">{children}</div>
+					<div className="flex-grow overflow-auto">
+						<div className="px-6 min-h-screen">
+							{children}
+						</div>
 					</div>
 				</div>
 			</body>
