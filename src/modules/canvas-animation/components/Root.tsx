@@ -3,12 +3,18 @@ import {Animation} from './Animation'
 
 export function CanvasAnimation() {
 	return (
-		<>
+		<section>
 			<Header />
 
-			<main className="mt-4">
+			<div>
+				<p>
+					Simple canvas animation with balls bouncing off the walls.
+				</p>
+			</div>
+
+			<div className="mt-4">
 				<Animation />
-			</main>
-		</>
+			</div>
+		</section>
 	)
 }
