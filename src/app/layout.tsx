@@ -3,6 +3,8 @@ import type {Metadata} from 'next'
 import {inter, lobster} from './fonts'
 import {NavBar} from '@/common/components'
 
+import {ThemeProvider} from '@/common/modules/theme/providers'
+
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -14,14 +16,14 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
 		<html lang="en" className={`${inter.variable} ${lobster.variable}`}>
 			<body className="font-sans">
-				<div className="flex min-h-screen">
-					<NavBar />
-					<div className="flex-grow">
-						<div className="px-6 h-full">
-							{children}
+				<ThemeProvider>
+					<div className="flex min-h-screen">
+						<NavBar />
+						<div className="flex-grow">
+							<div className="px-6 h-full">{children}</div>
 						</div>
 					</div>
-				</div>
+				</ThemeProvider>
 			</body>
 		</html>
 	)

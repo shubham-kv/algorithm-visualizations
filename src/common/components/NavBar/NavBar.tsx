@@ -1,5 +1,6 @@
 import {NavHeader} from './NavHeader'
 import {NavBarContent} from './NavBarContent'
+import {ThemeSwitcher} from '@/common/modules/theme/components'
 
 export function NavBar() {
 	return (
@@ -7,6 +8,10 @@ export function NavBar() {
 			<div className='hidden lg:block p-4'>
 				<NavHeader />
 				<NavBarContent />
+
+				<div className='mt-4'>
+					<ThemeSwitcher />
+				</div>
 			</div>
 		</div>
 	)
