@@ -20,8 +20,8 @@ type Dimension = {
 }
 
 const defaultDimensions: Dimension = Object.freeze({
-	width: 400,
-	height: 420
+	width: 300,
+	height: 300
 })
 
 type Indices = {
