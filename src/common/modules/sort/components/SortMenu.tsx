@@ -71,7 +71,7 @@ export function SortMenu(props: MenuProps) {
 	const isRunning = animationState === AnimationState.running
 
 	return (
-		<div className="flex-auto h-fit sm:max-w-xl lg:max-w-lg xl:max-w-md inline-flex flex-col p-4 space-y-4 border-gray-100 border-2 rounded-md">
+		<div className="flex-auto h-fit sm:max-w-xl lg:max-w-lg xl:max-w-md inline-flex flex-col p-4 space-y-4 border-gray-100 dark:border-zinc-800 border-2 rounded-md">
 			<div className="flex space-x-2">
 				<Button
 					onClick={resume}

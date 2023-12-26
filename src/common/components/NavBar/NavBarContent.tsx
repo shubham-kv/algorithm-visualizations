@@ -31,12 +31,12 @@ export function NavBarContent() {
 			<div className="flex flex-col space-y-2">
 				{navData.map((navItem) => {
 					const isActive = navItem.url === pathName
-					const activeClassName = '!text-white !bg-gray-900'
+					const activeClassName = '!text-white !bg-gray-900 dark:!text-black dark:!bg-gray-100'
 
 					return (
 						<div
 							key={navItem.url}
-							className={`transition-colors cursor-pointer rounded-md hover:bg-slate-200 hover:text-black ${
+							className={`transition-colors cursor-pointer rounded-md  hover:bg-gray-200 hover:text-black dark:hover:text-white dark:hover:bg-zinc-800 ${
 								isActive ? activeClassName : ''
 							} `}
 						>

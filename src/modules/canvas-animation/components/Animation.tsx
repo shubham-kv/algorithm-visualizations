@@ -3,11 +3,15 @@ import {useCallback, useRef, useState} from 'react'
 
 import {Canvas} from '@/common/components/Canvas'
 import {Ball} from '../entities/Ball'
+import {useTheme} from 'next-themes'
 
 const defaultWidth = 400
 const defaultHeight = 600
 
 export function Animation() {
+	const {systemTheme, theme} = useTheme()
+	const currentTheme = theme === 'system' ? systemTheme : theme
+
 	const ballsRef = useRef<Ball[]>([])
 	const [width, setWidth] = useState<number>(defaultWidth)
 	const [height, setHeight] = useState<number>(defaultHeight)
@@ -27,14 +31,14 @@ export function Animation() {
 			const balls = ballsRef.current
 
 			for (const ball of balls) {
-				ball.draw(ctx)
+				ball.draw(ctx, currentTheme as any)
 				ball.update({
 					width,
 					height
 				})
 			}
 		},
-		[width, height]
+		[width, height, currentTheme]
 	)
 
 	const update = useCallback(() => {
@@ -51,7 +55,7 @@ export function Animation() {
 	return (
 		<Canvas
 			wrapperClassName="w-[100%] h-[600px]"
-			canvasClassName="rounded-sm border-2 border-slate-300"
+			canvasClassName="rounded-sm border-2 border-slate-300 dark:border-zinc-800"
 			width={width}
 			height={height}
 			setWidth={setWidth}

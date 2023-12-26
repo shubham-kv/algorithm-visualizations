@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 
 import {inter, lobster} from './fonts'
-import {NavBar} from '@/common/components'
+import {NavBar, AppBar} from '@/common/components'
 
 import {ThemeProvider} from '@/common/modules/theme/providers'
 
@@ -20,6 +20,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 					<div className="flex min-h-screen">
 						<NavBar />
 						<div className="flex-grow">
+							<AppBar />
 							<div className="px-6 h-full">{children}</div>
 						</div>
 					</div>

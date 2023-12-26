@@ -4,6 +4,8 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {Canvas} from '@/common/components/Canvas'
 import {SortMenu} from '@/common/modules/sort/components/SortMenu'
 
+import {useTheme} from 'next-themes'
+
 import {random} from '@/common/utils'
 
 import {
@@ -42,6 +44,10 @@ const initialAnimationState: AnimationState = AnimationState.idle
 const defaultScenario: Scenario = 'random'
 
 export function BubbleSortVisualization() {
+	const {systemTheme, theme} = useTheme()
+	const currentTheme = theme === 'system' ? systemTheme : theme
+	const isDark = currentTheme === 'dark'
+
 	const [selectedFps, setSelectedFps] = useState<FpsChoiceData>(initialFps)
 
 	const [arrayLength, setArrayLength] = useState(initialArrayLength)
@@ -138,6 +144,11 @@ export function BubbleSortVisualization() {
 			const length = arraySize
 			const compareIndices = [indices.j, indices.j + 1]
 
+			if (isDark) {
+				ctx.fillStyle = 'rgba(255,255,255,0.1)'
+				ctx.fillRect(0, 0, width, height)
+			}
+
 			for (let k = 0; k < length; k++) {
 				const value = Math.floor(array[k])
 
@@ -146,16 +157,16 @@ export function BubbleSortVisualization() {
 				const y = height - barHeight
 
 				ctx.fillStyle = compareIndices.includes(k)
-					? 'rgba(255,0,0,0.4)'
-					: 'rgba(0,0,0,0.2)'
+					? (isDark ? 'rgba(255,100,100,0.8)' : 'rgba(255,0,0,0.4)')
+					: (isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.2)' )
 
 				ctx.fillRect(x, y, barWidth, barHeight)
 
-				ctx.fillStyle = 'rgba(0,0,0,0.8)'
+				ctx.fillStyle = isDark ? 'rgba(255,255,255,1)' : 'rgba(0,0,0,0.8)'
 				ctx.fillRect(x, y, barWidth, 10)
 			}
 		},
-		[width, height, arrayLength]
+		[width, height, isDark, arrayLength]
 	)
 
 	const update = useCallback(() => {
@@ -232,7 +243,7 @@ export function BubbleSortVisualization() {
 		<div className="flex flex-col md:flex-row flex-wrap gap-8">
 			<Canvas
 				wrapperClassName="flex-grow max-w-full sm:max-w-xl lg:max-w-lg xl:max-w-xl max-h-[420px] transition-all rounded-sm"
-				canvasClassName="rounded-sm shadow-lg border-2 border-gray-100"
+				canvasClassName="rounded-sm shadow-lg border-2 border-gray-100 dark:border-zinc-700"
 				width={width}
 				setWidth={setWidth}
 				height={height}
