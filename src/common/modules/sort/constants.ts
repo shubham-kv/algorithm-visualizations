@@ -25,7 +25,7 @@ export const FpsChoices: FpsChoiceData[] = [
 		key: 'very-fast',
 		name: 'very fast',
 		value: 30
-	},
+	}
 ]
 
 export const Scenarios: Scenario[] = [

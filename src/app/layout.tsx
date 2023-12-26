@@ -13,13 +13,11 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
 		<html lang="en" className={`${inter.variable} ${lobster.variable}`}>
-			<body className='font-sans'>
+			<body className="font-sans">
 				<div className="flex min-h-screen">
 					<NavBar />
 					<div className="flex-1">
-						<div className=''>
-							{children}
-						</div>
+						<div className="">{children}</div>
 					</div>
 				</div>
 			</body>

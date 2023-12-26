@@ -20,20 +20,17 @@ export function Animation() {
 		ballsRef.current = balls
 	}, [])
 
-	const draw = useCallback(
-		(ctx: CanvasRenderingContext2D) => {
-			const balls = ballsRef.current
+	const draw = useCallback((ctx: CanvasRenderingContext2D) => {
+		const balls = ballsRef.current
 
-			for (const ball of balls) {
-				ball.draw(ctx)
-				ball.update({
-					width,
-					height
-				})
-			}
-		},
-		[]
-	)
+		for (const ball of balls) {
+			ball.draw(ctx)
+			ball.update({
+				width,
+				height
+			})
+		}
+	}, [])
 
 	const update = useCallback(() => {
 		const balls = ballsRef.current

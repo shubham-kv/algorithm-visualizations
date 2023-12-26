@@ -6,7 +6,11 @@ import {SortMenu} from '@/common/modules/sort/components/SortMenu'
 
 import {range} from '@/common/utils'
 
-import {FpsChoiceData, FpsChoiceKey, Scenario} from '@/common/modules/sort/types'
+import {
+	FpsChoiceData,
+	FpsChoiceKey,
+	Scenario
+} from '@/common/modules/sort/types'
 import {AnimationState, FpsChoices} from '@/common/modules/sort/constants'
 
 const width = 700
@@ -45,21 +49,24 @@ export function BubbleSortVisualization() {
 		initialAnimationState
 	)
 
-	const fillArray = useCallback((length: number) => {
-		const array: number[] = []
+	const fillArray = useCallback(
+		(length: number) => {
+			const array: number[] = []
 
-		for (let i = 0; i < length; i++) {
-			const value = Math.floor(range(10, 90))
-			array.push(value)
-		}
+			for (let i = 0; i < length; i++) {
+				const value = Math.floor(range(10, 90))
+				array.push(value)
+			}
 
-		if (scenario === 'worst-case') {
-			array.sort((a, b) => b - a)
-		}
+			if (scenario === 'worst-case') {
+				array.sort((a, b) => b - a)
+			}
 
-		originalArrayRef.current = array
-		arrayRef.current = Array.from(array)
-	}, [scenario])
+			originalArrayRef.current = array
+			arrayRef.current = Array.from(array)
+		},
+		[scenario]
+	)
 
 	const start = useCallback(() => {
 		setIsStarted(true)

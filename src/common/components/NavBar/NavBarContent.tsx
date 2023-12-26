@@ -40,7 +40,10 @@ export function NavBarContent() {
 								isActive ? activeClassName : ''
 							} `}
 						>
-							<Link href={navItem.url} className="inline-flex w-full h-full p-2 rounded-md transition-colors">
+							<Link
+								href={navItem.url}
+								className="inline-flex w-full h-full p-2 rounded-md transition-colors"
+							>
 								<span>{navItem.name}</span>
 							</Link>
 						</div>

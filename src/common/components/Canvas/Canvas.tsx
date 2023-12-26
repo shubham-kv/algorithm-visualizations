@@ -1,6 +1,13 @@
 'use client'
 
-import {CanvasHTMLAttributes, DetailedHTMLProps, useCallback, useEffect, useRef, useState} from 'react'
+import {
+	CanvasHTMLAttributes,
+	DetailedHTMLProps,
+	useCallback,
+	useEffect,
+	useRef,
+	useState
+} from 'react'
 import {DEFAULT_FPS, DEFAULT_HEIGHT, DEFAULT_WIDTH} from './constants'
 import {AnimationState} from '@/common/modules/sort/constants'
 
