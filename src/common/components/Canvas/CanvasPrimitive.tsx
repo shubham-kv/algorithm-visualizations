@@ -12,9 +12,6 @@ import {CanvasProps} from './types'
 import {AnimationState} from '@/common/modules/sort/constants'
 import {DEFAULT_FPS, DEFAULT_HEIGHT, DEFAULT_WIDTH} from './constants'
 
-let then: number, now: number
-let animateHandle: number
-
 export function CanvasPrimitive(props: CanvasProps) {
 	const {
 		canvasClassName,
@@ -32,17 +29,21 @@ export function CanvasPrimitive(props: CanvasProps) {
 	const isMounted = useRef<boolean>(false)
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
 
+	const animateHandle = useRef<number>(0)
+	const then = useRef<number>(0)
+	const now = useRef<number>(0)
+
 	const animate = useCallback(
 		(ctx: CanvasRenderingContext2D) => {
 			if (!isMounted.current) {
 				return
 			}
 
-			now = Date.now()
-			const elapsed = now - then
+			now.current = Date.now()
+			const elapsed = now.current - then.current
 
 			if (elapsed > fpsInterval) {
-				then = now - (elapsed % fpsInterval)
+				then.current = now.current - (elapsed % fpsInterval)
 
 				ctx.clearRect(0, 0, width, height)
 				draw(ctx)
@@ -52,7 +53,7 @@ export function CanvasPrimitive(props: CanvasProps) {
 				}
 			}
 
-			animateHandle = requestAnimationFrame(() => {
+			animateHandle.current = requestAnimationFrame(() => {
 				animate(ctx)
 			})
 		},
@@ -61,7 +62,7 @@ export function CanvasPrimitive(props: CanvasProps) {
 
 	const startAnimation = useCallback(
 		(ctx: CanvasRenderingContext2D) => {
-			then = Date.now()
+			then.current = Date.now()
 			animate(ctx)
 		},
 		[animate]
@@ -82,7 +83,7 @@ export function CanvasPrimitive(props: CanvasProps) {
 			isMounted.current = false
 
 			cleanUp && cleanUp()
-			cancelAnimationFrame(animateHandle)
+			cancelAnimationFrame(animateHandle.current)
 		}
 	}, [canvas, initialize, startAnimation, cleanUp])
 

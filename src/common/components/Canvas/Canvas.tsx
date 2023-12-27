@@ -9,15 +9,23 @@ export function Canvas(props: CanvasProps) {
 	const wrapper = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
-		const handleResize = () => {
-			if (wrapper.current) {
-				const element = wrapper.current
-				const width = element.clientWidth
-				const height = element.clientHeight
+		let timerId: NodeJS.Timer
 
-				setWidth(width)
-				setHeight(height)
+		const handleResize = () => {
+			if (timerId) {
+				clearTimeout(timerId as any)
 			}
+
+			timerId = setTimeout(() => {
+				if (wrapper.current) {
+					const element = wrapper.current
+					const width = element.clientWidth
+					const height = element.clientHeight
+
+					setWidth(width)
+					setHeight(height)
+				}
+			}, 100)
 		}
 
 		handleResize()
